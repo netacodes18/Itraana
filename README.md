@@ -3,7 +3,9 @@ Timeless Attars · Pure Essence · Quiet Luxury
 
 ITRAANA is a **full-stack luxury attar (perfume oil) e-commerce platform** inspired by India’s rich perfumery heritage and expressed through modern, minimal design.
 
-The project blends **storytelling, craftsmanship, and technology** to deliver a refined digital shopping experience.
+The codebase is segregated into two independent tiers:
+* `client/`: A Next.js 15 frontend application.
+* `server/`: An Express.js + Mongoose + TypeScript backend application.
 
 ---
 
@@ -17,15 +19,6 @@ The project blends **storytelling, craftsmanship, and technology** to deliver a 
 
 <img width="1879" height="904" alt="Screenshot 2026-01-11 144923" src="https://github.com/user-attachments/assets/804ad969-5e43-4d7d-80fb-9b05930e2e3a" />
 
-<img width="1876" height="898" alt="Screenshot 2026-01-11 145003" src="https://github.com/user-attachments/assets/78bf3c81-9683-4299-831a-3f6409d02a3a" />
-
-<img width="1893" height="849" alt="Screenshot 2026-01-11 145240" src="https://github.com/user-attachments/assets/38ddcf03-7003-4bad-9f7c-8ce694fa44f4" />
-
-<img width="1890" height="856" alt="Screenshot 2026-01-11 145252" src="https://github.com/user-attachments/assets/056e96f5-eabf-4140-a63c-eeb9644e52be" />
-
-<img width="1882" height="904" alt="Screenshot 2026-01-11 145046" src="https://github.com/user-attachments/assets/ae434e55-3f3e-4769-86da-d2e9afb3471a" />
-
-
 ---
 
 ## 🌿 Brand Philosophy
@@ -37,53 +30,69 @@ Every element — from product cards to typography — reflects **quiet luxury**
 
 ---
 
-## 🧩 Project Overview
+## 🏗️ Architecture Layout
 
-This repository contains **both frontend and backend** in a single full-stack setup.
-
-### 🎨 Frontend
-- Luxury-inspired minimal UI
-- Storytelling hero section
-- Product collection with wishlist & cart
-- Slide-in login / signup drawer
-- User account dashboard
-- Testimonials & brand narrative
-- Fully responsive design
-
-### ⚙️ Backend
-- Secure user authentication (JWT)
-- Password hashing with bcrypt
-- User profile management
-- Wishlist & cart persistence
-- Order creation & history
-- RESTful API architecture
-
----
-
-## ✨ Key Features
-
-- Add to cart & wishlist
-- Persistent user sessions
-- Protected routes (Account, Orders, Wishlist)
-- Clean, scalable folder structure
-- Designed for future admin & payment integration
+```
+itraana/
+├── client/                      # Next.js 15 Frontend
+│   ├── src/
+│   │   ├── app/                 # Pages & routing
+│   │   ├── components/          # React components (CartDrawer, AuthDrawer, etc.)
+│   │   ├── context/             # AuthContext and CartContext (State management)
+│   │   └── api/axios.ts         # Axios client targeting backend port 5000
+│   └── package.json
+│
+├── server/                      # Express TypeScript Backend
+│   ├── src/
+│   │   ├── config/db.ts         # Mongoose Atlas pooling
+│   │   ├── controllers/         # Express controllers (req, res, next)
+│   │   ├── services/            # Decoupled core services (inventory, order)
+│   │   ├── models/              # Mongoose Schemas (User, Product, Order)
+│   │   ├── middleware/          # auth, rate-limiter, globalErrorHandler
+│   │   └── server.ts            # App entry point
+│   └── package.json
+│
+├── render.yaml                  # Blueprint for Render deployment
+└── README.md                    # Project document
+```
 
 ---
 
-## 🧱 Tech Stack
+## 🚀 Local Development Setup
 
-### Frontend
-- React + Vite
-- Tailwind CSS
-- Context API (Auth & Cart)
-- Lucide Icons
+To run both services concurrently on your local machine, open two terminals.
 
-### Backend
-- Node.js
-- Express.js
-- MongoDB + Mongoose
-- JWT Authentication
-- bcrypt
-- dotenv, cors
+### 1. Setup Backend Server (Port `5000`)
+```bash
+cd server
+npm install
+npm run dev
+```
+* **Seeding the Database**: To seed the 6 premium fragrances into your Atlas Database cluster, run:
+  ```bash
+  npm run seed
+  ```
 
+### 2. Setup Frontend Client (Port `3000`)
+```bash
+cd client
+npm install
+npm run dev
+```
 
+The frontend will load at [http://localhost:3000](http://localhost:3000) and automatically route its API requests to the Express server at [http://localhost:5000/api](http://localhost:5000/api).
+
+---
+
+## ☁️ Deployment on Render
+
+This project includes a pre-configured `render.yaml` blueprint file for easy hosting on Render.
+
+1. Create a new account on [Render](https://render.com/).
+2. Click **New +** and select **Blueprint**.
+3. Connect your GitHub repository containing this codebase.
+4. Render will parse the `render.yaml` file and automatically instantiate:
+   * **Backend service**: `itraana-backend` on Node.
+   * **Frontend service**: `itraana-frontend` on Node.
+5. In your Render Dashboard, you can edit the environment variables (`MONGO_URI`, `JWT_SECRET`) if you want to override the default credentials.
+6. Once deployed, update the `NEXT_PUBLIC_API_URL` environment variable on your frontend service to point to your live Render backend URL (`https://your-backend-app.onrender.com/api`).

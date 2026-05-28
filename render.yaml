@@ -1,0 +1,34 @@
+services:
+  # ── Express TypeScript Backend Service ───────────────────────────────
+  - type: web
+    name: itraana-backend
+    runtime: node
+    rootDir: server
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: MONGO_URI
+        value: mongodb+srv://civicpulse_user:Netaji%402023@cluster0.s97etd4.mongodb.net/itraana?appName=Cluster0
+      - key: JWT_SECRET
+        value: itraana_super_secret_key
+      - key: NODE_ENV
+        value: production
+
+  # ── Next.js 15 Frontend Client Service ───────────────────────────────
+  - type: web
+    name: itraana-frontend
+    runtime: node
+    rootDir: client
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://itraana-backend.onrender.com/api
+      - key: MONGO_URI
+        value: mongodb+srv://civicpulse_user:Netaji%402023@cluster0.s97etd4.mongodb.net/itraana?appName=Cluster0
+      - key: JWT_SECRET
+        value: itraana_super_secret_key
+      - key: NODE_ENV
+        value: production

@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: itraana
+    runtime: node
+    buildCommand: npm run build
+    startCommand: npm run start
+    envVars:
+      - key: MONGO_URI
+        value: mongodb+srv://civicpulse_user:Netaji%402023@cluster0.s97etd4.mongodb.net/itraana?appName=Cluster0
+      - key: JWT_SECRET
+        value: itraana_super_secret_key
+      - key: NODE_ENV
+        value: production
