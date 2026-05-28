@@ -38,8 +38,12 @@ export default function AuthDrawer() {
       localStorage.setItem("token", res.data.token);
       login(res.data.user);
       setIsAuthOpen(false);
-    } catch (err) {
-      alert("Registration failed. Please make sure all fields are filled.");
+    } catch (err: any) {
+      const serverMsg =
+        err?.response?.data?.message ||
+        err?.response?.data?.errors?.join(", ") ||
+        "Registration failed. Please make sure all fields are filled.";
+      alert(serverMsg);
     } finally {
       setLoading(false);
     }
