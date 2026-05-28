@@ -25,9 +25,21 @@ connectDB().catch((err) => {
 });
 
 // Middleware
+const allowedOrigins = [
+  "https://itraana.onrender.com",
+  "http://localhost:3000",
+];
+
 app.use(
   cors({
-    origin: "*", // Allow all origins for flexibility, configure specific domains in production
+    origin: (origin, callback) => {
+      // Allow requests with no origin (mobile apps, curl, server-to-server)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(null, true); // Fallback: allow all for now
+    },
     credentials: true,
   })
 );
